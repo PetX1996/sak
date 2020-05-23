@@ -1,0 +1,423 @@
+#include "ui/menudef.h"
+#include "ui_mp/common_macro.inc"
+
+#define CHOICE_SIZE_X			//100
+#define CHOICE_SIZE_Y			22
+
+#define CHOICE_X_START			0 //doprava
+#define CHOICE_Y_START			34 //dole
+
+#define CHOICE_SEP_OFFSET_Y		-2
+
+
+#include "ui_mp/menustyle.inc" 
+#include "ui/choices_setup_common.menu"
+
+#define CHOICE_DBUTTON_PETX( itemIndex, textArg, actionArg, onFocusArg, leaveFocusArg, visArg ) \ //cervene tlacitko(bez menuresponse)
+		CHOICE_BUTTON_BG( itemIndex, visArg ) \
+		itemDef \
+		{ \
+			type			ITEM_TYPE_BUTTON \
+			rect			CHOICE_RECT( itemIndex ) \
+			exp				text( textArg ); \
+			textfont		CHOICE_TEXTFONT \
+			textscale		CHOICE_TEXTSIZE \
+			textstyle		CHOICE_TEXTSTYLE \
+			textAlign		CHOICE_TEXTALIGN \
+			textAlignX		CHOICE_TEXT_OFFSET_X \
+			forecolor		128 0 0 0.8 \
+			visible			visArg \
+			CHOICE_SCRIPTS_ALL( itemIndex, actionArg, onFocusArg, leaveFocusArg ) \
+		} \
+
+	//extraArgs \		
+		
+#define PREPROC_TEXT_DRAW_ALIGNED_EXP_VIS( prect, porigin, ptext, psize, palignx, paligny, palign, pcolor, vis) \ //tlacitko aktivovane dvarom viditelne iba niekedy
+itemDef { \
+	rect			prect \
+	origin 			porigin \
+	textalignx		palignx textaligny paligny \
+	textstyle		ITEM_TEXTSTYLE_SHADOWED \
+	textalign		palign \
+	textscale		psize \
+	forecolor		pcolor \
+	exp				text( ptext ); \
+	visible			vis \
+	decoration 		autowrapped \
+	} \
+	
+#define CHOICE_SECTION_TITLE_COLOR( itemIndex, titleArg, visArg, color ) \  //farebny nadpis
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			(SECTION_X_OFFSET+0) 7 240 0.5 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		background		"line_horizontal" \
+		forecolor		1 1 1 0.85 \
+		visible			visArg \
+		decoration \
+	}	 \
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			(SECTION_X_OFFSET+20) 8 200 10 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		background		"line_horizontal" \
+		forecolor		color 0.8 \
+		visible			visArg \
+		decoration \
+	} \
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			(SECTION_X_OFFSET+0) 19 240 0.5 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		background		"line_horizontal" \
+		forecolor		1 1 1 0.85 \
+		visible			visArg \
+		decoration \
+	} \
+	itemDef \
+	{ \
+		type			ITEM_TYPE_TEXT \
+		rect			(SECTION_X_OFFSET+0) -1 240 24 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		forecolor		1 1 1 0.8 \
+		exp				text( titleArg );\
+		textstyle 		ITEM_TEXTSTYLE_SHADOWED \
+		textfont		UI_FONT_NORMAL \
+		textscale		TEXTSIZE_DEFAULT \
+		textstyle		CHOICE_TEXTSTYLE \
+		textAlign		ITEM_ALIGN_MIDDLE_CENTER \
+		textAlignX		SECTION_TEXT_OFFSET_X \
+		visible 		visArg \
+		decoration \
+	}	
+	
+#define MENU_LOCKED_COLOR		0.25 0.25 0.25 1
+
+#define ORIGIN_BUTTON_BACK			52 438
+#define ORIGIN_MENU_TREE			54 64
+#define ORIGIN_MENU_TITLE_MARINES	178 64
+#define ORIGIN_MENU_TITLE_OPFOR		170 64
+#define TREE_COLOR					1 1 1 0.5
+#define LABEL_TEXT_COLOR		0.7 0.75 0.75 1
+
+#define HIGH_BOUND		"1000"
+
+// ------
+
+#define STAT_XP execNow "statGetInDvar 2301 ui_stat_rankxp"
+
+{
+	menuDef
+	{
+		name			"shop_allies"
+		rect			0 0 640 480
+		focuscolor		COLOR_FOCUSED
+		style			WINDOW_STYLE_EMPTY
+		blurWorld		7.0
+		onOpen
+		{
+			// update player's XP
+			STAT_XP
+			
+			//pc's initial selection loadout display workaround
+			#ifdef PC
+				execnow "set ui_shop_name Skin nepriatela; set ui_shop_time 60; set ui_shop_text Ziskate skin lovca.; set ui_shop_image skin"
+			#endif
+		}
+		onEsc 
+		{
+			scriptMenuResponse "back";
+		}
+		
+		#ifndef PC
+		execkeyint BUTTON_START
+		{
+			close self;
+		}
+		#endif
+		
+		// background overlay
+		itemDef	{
+			style			WINDOW_STYLE_FILLED
+			rect			0 0 640 480 HORIZONTAL_ALIGN_FULLSCREEN VERTICAL_ALIGN_FULLSCREEN
+			backcolor		0 0 0 .75 //0 0.05 0.15 0.5
+			visible			1
+			decoration
+		}
+		// gradient_top
+		itemDef	{
+			style			WINDOW_STYLE_SHADER
+			rect			0 0 854 75 HORIZONTAL_ALIGN_FULLSCREEN 0
+			background		"gradient_top"
+			visible			1
+			decoration
+		}
+		// gradient_bottom
+		itemDef	{
+			style			WINDOW_STYLE_SHADER
+			rect			0 405 854 75 HORIZONTAL_ALIGN_FULLSCREEN 0
+			background		"gradient_bottom"
+			visible			1
+			decoration
+		}	
+	
+		//-----------------ubody-----------------------
+		
+		itemDef //body
+		{
+			type			ITEM_TYPE_TEXT
+			rect			-100 -65 200 50 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_BOTTOM //doprava dole
+			exp      		text("uPoints: "+dvarInt("ui_upoint"))
+			textfont		UI_FONT_NORMAL
+			textscale		TEXTSIZE_DEFAULT
+			textAlign		ITEM_ALIGN_MIDDLE_CENTER
+			forecolor		CHOICE_TEXTCOLOR
+			visible			when(dvarInt("ui_upoint") != 0)
+			decoration	
+		}
+		
+		itemDef //body - 0
+		{
+			type			ITEM_TYPE_TEXT
+			rect			-100 -65 200 50 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_BOTTOM //doprava dole
+			exp      		text("uPoints: "+dvarInt("ui_upoint"))
+			textfont		UI_FONT_NORMAL
+			textscale		TEXTSIZE_DEFAULT
+			textAlign		ITEM_ALIGN_MIDDLE_CENTER
+			forecolor		1 0 0 1
+			visible			when(dvarInt("ui_upoint") == 0)
+			decoration	
+		}
+		
+		//---------------------------------------------
+	
+		// ------------------ TREE TITLE ------------------
+		
+		CHOICE_MENU_TITLE( "Shop" )
+
+		// ------------------ buttons ---------------------
+		#define BACK_OPEN	;
+		#include "ui_mp/navcontrols.inc"
+
+		#undef  CHOICE_X_START
+		#define CHOICE_X_START			-25
+
+		
+		CHOICE_SECTION_TITLE_COLOR( 1, "Speciality" , 1, 0.4 0.6 1 )	//speciality menu	
+
+		//nazov: Name (Price)			
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 2, "Skin nepriatela ("+dvarInt("ui_shop_price_allies_skin")+")"	 	, scriptMenuResponse "shop_skin"; close self;, execnow "set ui_shop_name Skin nepriatela; set ui_shop_time 60; set ui_shop_text Ziskate skin lovca.; set ui_shop_image skin", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_skin")&&dvarint("ui_speciality_locked") == 0), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_skin")&&dvarint("ui_speciality_locked") == 0 )		
+		CHOICE_DBUTTON_PETX( 2, "Skin nepriatela ("+dvarInt("ui_shop_price_allies_skin")+")"	 			, ; , execnow "set ui_shop_name Skin nepriatela; set ui_shop_time 60; set ui_shop_text Ziskate skin lovca.; set ui_shop_image skin", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_skin")||dvarint("ui_speciality_locked") == 1) )
+		
+
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 3, "Rychlost ("+dvarInt("ui_shop_price_allies_speed")+")"		 	 	, scriptMenuResponse "shop_speed"; close self;, execnow "set ui_shop_name Rychlost; set ui_shop_time 10; set ui_shop_text Pridanie 30% rychlosti.; set ui_shop_image speed", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_speed")&&dvarint("ui_speciality_locked") == 0), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_speed")&&dvarint("ui_speciality_locked") == 0 )
+		CHOICE_DBUTTON_PETX( 3, "Rychlost ("+dvarInt("ui_shop_price_allies_speed")+")"		 	 			, ; , execnow "set ui_shop_name Rychlost; set ui_shop_time 10; set ui_shop_text Pridanie 30% rychlosti.; set ui_shop_image speed", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_speed")||dvarint("ui_speciality_locked") == 1) )
+
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 4, "Repelent ("+dvarInt("ui_shop_price_allies_repelent")+")"		 	, scriptMenuResponse "shop_repelent"; close self;, execnow "set ui_shop_name Repelent; set ui_shop_time 15; set ui_shop_text Aplikujete na seba repelent, ktory odpudzuje lovcov.; set ui_shop_image repelent", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_repelent")&&dvarint("ui_speciality_locked") == 0), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_repelent")&&dvarint("ui_speciality_locked") == 0 )
+		CHOICE_DBUTTON_PETX( 4, "Repelent ("+dvarInt("ui_shop_price_allies_repelent")+")"		 			, ; , execnow "set ui_shop_name Repelent; set ui_shop_time 15; set ui_shop_text Aplikujete na seba repelent, ktory odpudzuje lovcov.; set ui_shop_image repelent", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_repelent")||dvarint("ui_speciality_locked") == 1) )
+
+
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 5, "Neviditelnost ("+dvarInt("ui_shop_price_allies_neviditelnost")+")"	, scriptMenuResponse "shop_neviditelnost"; close self;, execnow "set ui_shop_name Neviditelnost; set ui_shop_time 10; set ui_shop_text Zneviditelni hraca. Pozor! pocut vas je stale!; set ui_shop_image neviditelnost", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_neviditelnost")&&dvarint("ui_speciality_locked") == 0), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_neviditelnost")&&dvarint("ui_speciality_locked") == 0 )
+		CHOICE_DBUTTON_PETX( 5, "Neviditelnost ("+dvarInt("ui_shop_price_allies_neviditelnost")+")"			, ; , execnow "set ui_shop_name Neviditelnost; set ui_shop_time 10; set ui_shop_text Zneviditelni hraca. Pozor! pocut vas je stale!; set ui_shop_image neviditelnost", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_neviditelnost")||dvarint("ui_speciality_locked") == 1) )
+
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 6, "Teleport ("+dvarInt("ui_shop_price_allies_teleport")+")"			, scriptMenuResponse "shop_teleport"; close self;, execnow "set ui_shop_name Teleport; set ui_shop_time 0; set ui_shop_text Teleportuje hraca na respawn.; set ui_shop_image teleport", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_teleport")&&dvarint("ui_speciality_locked") == 0), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_teleport")&&dvarint("ui_speciality_locked") == 0 )
+		CHOICE_DBUTTON_PETX( 6, "Teleport ("+dvarInt("ui_shop_price_allies_teleport")+")"					, ; , execnow "set ui_shop_name Teleport; set ui_shop_time 0; set ui_shop_text Teleportuje hraca na respawn.; set ui_shop_image teleport", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_teleport")||dvarint("ui_speciality_locked") == 1) )
+		
+		
+		//CHOICE_DBUTTON_PETX( 2, "Fast", ; , execnow "set ui_class_name Fast; set ui_class_speed 120; set ui_class_lvl 5; set ui_class_image 2; set ui_class_health 100", ;, when( PLAYER_LVL < 4 ), PLAYER_LVL < 4)
+		
+		#undef  CHOICE_Y_START
+		#undef  CHOICE_X_START
+		#define CHOICE_X_START			190 //doprava
+		#define CHOICE_Y_START			-134//dole		
+		
+		CHOICE_SECTION_TITLE_COLOR( 8, "Weapons" , 1, 1 0 0 )    //weapon menu
+		
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 9, "Flash ("+dvarInt("ui_shop_price_allies_flash")+")", scriptMenuResponse "shop_flash"; close self;, execnow "set ui_shop_name Flash; set ui_shop_time 0; set ui_shop_text Na osoby v zasiahnutom priestore posobi ohlusujucim treskom a intenzivnym zableskom. Ucinok trva niekolko sekund.; set ui_shop_image flash", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_flash")&&dvarInt("ui_shop_flash_grenade_mp_avb") == 1), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_flash")&&dvarInt("ui_shop_flash_grenade_mp_avb") == 1 )	
+		CHOICE_DBUTTON_PETX( 9, "Flash ("+dvarInt("ui_shop_price_allies_flash")+")", ; , execnow "set ui_shop_name Flash; set ui_shop_time 0; set ui_shop_text Na osoby v zasiahnutom priestore posobi ohlusujucim treskom a intenzivnym zableskom. Ucinok trva niekolko sekund.; set ui_shop_image flash", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_flash")||dvarInt("ui_shop_flash_grenade_mp_avb") == 0) )
+		
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 10, "Granat ("+dvarInt("ui_shop_price_allies_granat")+")", scriptMenuResponse "shop_granat"; close self;, execnow "set ui_shop_name Granat; set ui_shop_time 0; set ui_shop_text Nici lovcov posobenim tlakovej vlny vybuchu trhavej naplne.; set ui_shop_image granat", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_granat")&&dvarInt("ui_shop_frag_grenade_mp_avb") == 1), dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_granat")&&dvarInt("ui_shop_frag_grenade_mp_avb") == 1 )	
+		CHOICE_DBUTTON_PETX( 10, "Granat ("+dvarInt("ui_shop_price_allies_granat")+")", ; , execnow "set ui_shop_name Granat; set ui_shop_time 0; set ui_shop_text Nici nepriatelov posobenim tlakovej vlny vybuchu trhavej naplne.; set ui_shop_image granat", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_granat")||dvarInt("ui_shop_frag_grenade_mp_avb") == 0) )	
+		
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 11, "Claymore ("+dvarInt("ui_shop_price_allies_claymore")+")", scriptMenuResponse "shop_claymore"; close self;, execnow "set ui_shop_name Claymore; set ui_shop_time 0; set ui_shop_text Smerova mina, ktora po aktivacii pred seba vrhne 700 kovovych gulocok v uhle 60°. Aktivuje sa pohybom v zornom poli miny.; set ui_shop_image claymore", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_claymore")&&dvarInt("ui_shop_claymore_mp_avb") == 1), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_claymore")&&dvarInt("ui_shop_claymore_mp_avb") == 1 )	
+		CHOICE_DBUTTON_PETX( 11, "Claymore ("+dvarInt("ui_shop_price_allies_claymore")+")", ; , execnow "set ui_shop_name Claymore; set ui_shop_time 0; set ui_shop_text Smerova mina, ktora po aktivacii pred seba vrhne 700 kovovych gulocok v uhle 60°. Aktivuje sa pohybom v zornom poli miny.; set ui_shop_image claymore", ; ,when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_claymore")||dvarInt("ui_shop_claymore_mp_avb") == 0) )	
+		
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 12, "C4 ("+dvarInt("ui_shop_price_allies_c4")+")", scriptMenuResponse "shop_c4"; close self;, execnow "set ui_shop_name C4; set ui_shop_time 0; set ui_shop_text Plasticka trhavina, ktora sa odpaluje na dialku.; set ui_shop_image c4", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_c4")&&dvarInt("ui_shop_c4_mp_avb") == 1), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_c4")&&dvarInt("ui_shop_c4_mp_avb") == 1 )	
+		CHOICE_DBUTTON_PETX( 12, "C4 ("+dvarInt("ui_shop_price_allies_c4")+")", ; , execnow "set ui_shop_name C4; set ui_shop_time 0; set ui_shop_text Plasticka trhavina, ktora sa odpaluje na dialku.; set ui_shop_image c4", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_c4")||dvarInt("ui_shop_c4_mp_avb") == 0) )	
+		
+		
+		#undef  CHOICE_Y_START
+		#undef  CHOICE_X_START
+		#define CHOICE_X_START			405 //doprava
+		#define CHOICE_Y_START			-254//dole
+		
+		CHOICE_SECTION_TITLE_COLOR( 13, "Other" , 1, 1 1 0 )	//menu "ostatne"	
+		
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 14, "Obnovit Zdravie ("+dvarInt("ui_shop_price_allies_health")+")", scriptMenuResponse "shop_health"; close self;, execnow "set ui_shop_name Obnovit zdravie; set ui_shop_time 0; set ui_shop_text Obnovi zdravie na zakladnu hodnotu pre dany class.; set ui_shop_image health", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_health")&&dvarInt("ui_shop_health_avb") == 1), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_health")&&dvarInt("ui_shop_health_avb") == 1 )	
+		CHOICE_DBUTTON_PETX( 14, "Obnovit Zdravie ("+dvarInt("ui_shop_price_allies_health")+")", ; , execnow "set ui_shop_name Obnovit zdravie; set ui_shop_time 0; set ui_shop_text Obnovi zdravie na zakladnu hodnotu pre dany class.; set ui_shop_image health", ; ,  when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_health")||dvarInt("ui_shop_health_avb") == 0 ))
+		
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 15, "Radar ("+dvarInt("ui_shop_price_allies_radar")+")", scriptMenuResponse "shop_radar"; close self;, execnow "set ui_shop_name Radar; set ui_shop_time 0; set ui_shop_text Ziskate Radar, pomocou ktoreho odhalite poziciu nepriatela.; set ui_shop_image radar", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_radar")&&dvarInt("ui_shop_radar_avb") == 1), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_radar")&&dvarInt("ui_shop_radar_avb") == 1 )	
+		CHOICE_DBUTTON_PETX( 15, "Radar ("+dvarInt("ui_shop_price_allies_radar")+")", ; , execnow "set ui_shop_name Radar; set ui_shop_time 0; set ui_shop_text Ziskate Radar, pomocou ktoreho odhalite poziciu nepriatela.; set ui_shop_image radar", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_radar")||dvarInt("ui_shop_radar_avb") == 0) )		
+
+		CHOICE_BUTTON_FOCUS_VIS_ADV( 16, "Repel granat ("+dvarInt("ui_shop_price_allies_repnad")+")", scriptMenuResponse "shop_repnad"; close self;, execnow "set ui_shop_name Repel granat; set ui_shop_time 0; set ui_shop_text Granat naplneny repelentom odpudzujuci lovcov.; set ui_shop_image repnad", ; , when(dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_repnad")&&dvarInt("ui_shop_smoke_grenade_mp_avb") == 1), dvarint("ui_upoint")>=dvarInt("ui_shop_price_allies_repnad")&&dvarInt("ui_shop_smoke_grenade_mp_avb") == 1 )	
+		CHOICE_DBUTTON_PETX( 16, "Repel granat ("+dvarInt("ui_shop_price_allies_repnad")+")", ; , execnow "set ui_shop_name Repel granat; set ui_shop_time 0; set ui_shop_text Granat naplneny repelentom odpudzujuci lovcov.; set ui_shop_image repnad", ; , when(dvarint("ui_upoint")<dvarInt("ui_shop_price_allies_repnad")||dvarInt("ui_shop_smoke_grenade_mp_avb") == 0) )		
+
+		#include "ui/safearea.menu"
+		
+		////-----------------------------------////
+		////---------Info menu-----------------////
+		////-----------------------------------////
+
+		#define INFO_X					40
+		#define INFO_Y					260
+		
+		////-----------------------------------////
+		////-----------Ramik-------------------////
+		///////////////////////////////////////////
+		
+		itemDef	// POZADIE
+		{
+			style			WINDOW_STYLE_SHADER
+			rect			-280 25 560 150 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER //doprava, dole, velkost: doprava, dole
+			background		"okno_stred"
+			visible			1	
+			decoration	
+		}
+		
+		itemDef	// ciara
+		{
+			style			WINDOW_STYLE_SHADER
+			rect			-280 25 560 3 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER //doprava, dole, velkost: doprava, dole
+			background		"black"
+			visible			1	
+			decoration	
+		}	
+		
+		itemDef	// ciara
+		{
+			style			WINDOW_STYLE_SHADER
+			rect			-280 172 560 3 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER //doprava, dole, velkost: doprava, dole
+			background		"black"
+			visible			1	
+			decoration	
+		}
+		
+		itemDef	// ciara
+		{
+			style			WINDOW_STYLE_SHADER
+			rect			-280 28 3 144 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER //doprava, dole, velkost: doprava, dole
+			background		"black"
+			visible			1	
+			decoration	
+		}
+		
+		itemDef	// ciara
+		{
+			style			WINDOW_STYLE_SHADER
+			rect			277 28 3 144 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER //doprava, dole, velkost: doprava, dole
+			background		"black"
+			visible			1	
+			decoration	
+		}
+		
+		////------------------------------//////
+		////--------------info------------//////
+		////////////////////////////////////////
+		
+		#define SHOP_NAME					dvarString("ui_shop_name")
+		#define SHOP_IMAGE					dvarString("ui_shop_image")
+		#define SHOP_TIME					dvarInt("ui_shop_time")
+		#define SHOP_INFO					dvarString("ui_shop_text")	
+
+		// obrazok veci
+		PREPROC_SHADER_DRAW_ALIGNED( 15 15 120 120 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_BOTTOM, 0 0 , "shop_image_"+SHOP_IMAGE, 1 1 1 1, 0, 1, 1 1 1 1 )		
+
+		itemDef
+		{
+			name			"nadpis"
+			rect			-250 -18 500 64 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		0.8
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textAlign		ITEM_ALIGN_MIDDLE_CENTER
+			forecolor		COLOR_TITLE
+			exp 			text( SHOP_NAME );
+			visible			1 //zapnut
+			decoration
+		}		
+		
+		itemDef 
+		{ 
+			style			WINDOW_STYLE_SHADER
+			name			"obrazok"
+			rect			-265 40 120 120 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			forecolor		1 1 1 1
+			exp				material( "shop_image_"+SHOP_IMAGE ); 
+			visible			1
+			decoration 		
+		} 
+			
+		itemDef
+		{
+			name			"info"
+			rect			-130 55 410 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_DEFAULT
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			forecolor		CHOICE_TEXTCOLOR
+			exp 			text( "INFO: "+SHOP_INFO );
+			visible			1 //zapnut
+			decoration		autowrapped
+		}
+
+		itemDef
+		{
+			name			"speciality1"
+			rect			-130 120 500 64 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_DEFAULT
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			forecolor		CHOICE_TEXTCOLOR
+			exp 			text( "S1: "+dvarstring("ui_spec1") );
+			visible			when(dvarstring("ui_spec1") != "" && SHOP_TIME != 0) //zapnut
+			decoration
+		}	
+
+		itemDef
+		{
+			name			"speciality2"
+			rect			-130 135 500 64 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_DEFAULT
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			forecolor		CHOICE_TEXTCOLOR
+			exp 			text( "S2: "+dvarstring("ui_spec2") );
+			visible			when(dvarstring("ui_spec2") != "" && SHOP_TIME != 0) //zapnut
+			decoration
+		}	
+		
+		itemDef
+		{
+			name			"cas"
+			rect			-130 150 500 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_DEFAULT
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			forecolor		CHOICE_TEXTCOLOR
+			exp 			text( "Cas trvania: "+SHOP_TIME+" sekund" );
+			visible			when(SHOP_TIME != 0) //zapnut
+			decoration
+		}
+		
+		itemDef
+		{
+			name			"cena"
+			rect			-130 165 500 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_DEFAULT
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			forecolor		CHOICE_TEXTCOLOR
+			exp 			text( "Cena: "+dvarInt("ui_shop_price_allies_"+SHOP_IMAGE) );
+			visible			1 //zapnut
+			decoration
+		}	
+
+	}
+}

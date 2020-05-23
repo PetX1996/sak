@@ -1,0 +1,12 @@
+{
+	menuDef
+	{
+		name			"quick_suicide"
+		onOpen
+		{
+			scriptMenuResponse "suicide";	
+
+			close self;
+		}
+	}
+}

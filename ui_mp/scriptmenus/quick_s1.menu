@@ -1,0 +1,12 @@
+{
+	menuDef
+	{
+		name			"quick_s1"
+		onOpen
+		{
+			scriptMenuResponse "speciality1";	
+
+			close self;
+		}
+	}
+}

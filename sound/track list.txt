@@ -1,0 +1,43 @@
+round_1 = Linkin Park : Numb
+round_2 = Linkin Park : From the inside
+round_3 = Linkin Park : Easier to Run
+round_4 = Ricky Martin : Frío ft. Wisin & Yandel 
+round_5 = The Prodigy : Omen
+round_6 = Linkin Park : New divide
+round_7 = Linkin Park : Crawling
+round_8 = Rachid Taha : barra barra 
+round_9 = Disturbed : Asylum
+round_10 = Trapt : Stand Up
+
+
+
+----------------------------------
+
+
+
+
+round_end_1 = Matrix soundtrack
+round_end_2 = Linkin Park : Dont Stay
+round_end_3 = Earth tribute - "Adiemus" 
+round_end_4 = MIRRORED THEORY - The Cleansing 
+round_end_5 = Vangelis - 1492 OST - Conquest of Paradise 
+round_end_6 = Clint Mansell - Requiem for a dream(Lux Aeterna)
+round_end_7 = Inception Soundtrack - Dream is Collapsing (Hans Zimmer) 
+round_end_8 = Saw SoundTrack 
+round_end_9 = Two Steps from Hell - Heart of Courage 
+round_end_10 = Kavinsky - Nightcall
+round_end_11 = Redlight King - Bullet In My Hand 
+round_end_12 = Trapt - Sound Off
+round_end_13 = 30 Second to Mars - Made of Glass
+round_end_14 = Trapt - Hollowman
+round_end_15 = Trapt - End of my Rope
+round_end_16 = Trapt - Stranger in the Mirror
+round_end_16 = Matrix soundtrack
+
+
+----------------------------------
+
+
+bonus_round_1 = Matrix - soundtrack
+bonus_round_2 = Trapt - Headstrong
+bonus_round_3 = Disturbed - A Welcome Burden

@@ -1,0 +1,51 @@
+verzia 0.01(23.8.2011)
+
+-zaciatok prace
+
+verzia 0.1(18.9.2011)
+
+-zobrazenie score na konci kola/mapy
+-zlepseny vyber lovca
+-hudba
+-menu pre vyber classov, help menu
+
+verzia 0.2(8.10.2011)
+
+-respawn lovca ak su 2 az 3 jumperi
+-nove hud elementy
+-pridanie shopu
+
+verzia 0.3(29.10.2011)
+
+-afk ochrana                 
+-admin menu                  
+-bonus na konci kola         
+-moznost zmenit class u lovca
+
+verzia 0.4(19.11.2011)
+
+-speciality(skin,rychlost,neviditelnost,repelent,zmrazovac)
+
+verzia 0.5(4.12.2011)
+
+-UAV vlna po zabitom jumperovi
+-shop(teleport,repel granat)
+-speciality box
+
+verzia 0.6(25.12.2011)
+
+-pridane nove skiny hracov
+-pridana vlastnost pre kazdy class
+-maximalny level je 100
+
+verzia 0.7(4.1.2011)
+
+-zlepseny vyber lovca
+-info system
+-bonusove kolo
+-tabulka na konci kola
+
+verzia 0.8(aktualna)
+
+-zmena pridavania bodov
+-pridany RANK do help menu

@@ -1,0 +1,474 @@
+
+#include "ui/menudef.h"
+#include "ui_mp/common_macro.inc"
+
+#include "ui_mp/menustyle.inc"
+#include "ui/choices_setup_common.menu"
+
+#define CHOICE_SECTION_TITLE_COLOR( itemIndex, titleArg, visArg, color ) \  //farebny nadpis
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			(SECTION_X_OFFSET+0) 7 240 0.5 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		background		"line_horizontal" \
+		forecolor		1 1 1 0.85 \
+		visible			visArg \
+		decoration \
+	}	 \
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			(SECTION_X_OFFSET+20) 8 200 10 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		background		"line_horizontal" \
+		forecolor		color 0.8 \
+		visible			visArg \
+		decoration \
+	} \
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			(SECTION_X_OFFSET+0) 19 240 0.5 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		background		"line_horizontal" \
+		forecolor		1 1 1 0.85 \
+		visible			visArg \
+		decoration \
+	} \
+	itemDef \
+	{ \
+		type			ITEM_TYPE_TEXT \
+		rect			(SECTION_X_OFFSET+0) -1 240 24 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		forecolor		1 1 1 0.8 \
+		exp				text( titleArg );\
+		textstyle 		ITEM_TEXTSTYLE_SHADOWED \
+		textfont		UI_FONT_NORMAL \
+		textscale		TEXTSIZE_DEFAULT \
+		textstyle		CHOICE_TEXTSTYLE \
+		textAlign		ITEM_ALIGN_MIDDLE_CENTER \
+		textAlignX		SECTION_TEXT_OFFSET_X \
+		visible 		visArg \
+		decoration \
+	}
+	
+#define SECTION_TITLE_COLOR_ALIGNED( x, y, ax, ay, titleArg, visArg, color ) \  //farebny nadpis
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			-170 0 340 0.5 ax ay \
+		origin			x y \
+		background		"line_horizontal" \
+		forecolor		1 1 1 0.85 \
+		visible			visArg \
+		decoration \
+	}	 \
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			-150 2 300 17 ax ay \
+		origin			x y \
+		background		"line_horizontal" \
+		forecolor		color 0.7 \
+		visible			visArg \
+		decoration \
+	} \
+	itemDef \
+	{ \
+		style			WINDOW_STYLE_SHADER \
+		rect			-170 20 340 0.5 ax ay \
+		origin			x y \
+		background		"line_horizontal" \
+		forecolor		1 1 1 0.85 \
+		visible			visArg \
+		decoration \
+	} \
+	itemDef \
+	{ \
+		type			ITEM_TYPE_TEXT \
+		rect			-115 -2 240 24 ax ay \
+		origin			x y \
+		forecolor		1 1 1 0.8 \
+		exp				text( titleArg );\
+		textstyle 		ITEM_TEXTSTYLE_SHADOWED \
+		textfont		UI_FONT_NORMAL \
+		textscale		TEXTSIZE_DEFAULT \
+		textstyle		CHOICE_TEXTSTYLE \
+		textAlign		ITEM_ALIGN_MIDDLE_CENTER \
+		textAlignX		SECTION_TEXT_OFFSET_X \
+		visible 		visArg \
+		decoration \
+	}	
+	
+#define CHOICE_SECTION_TEXT( itemIndex, titleArg, visArg) \  //text
+	itemDef \
+	{ \
+		type			ITEM_TYPE_TEXT \
+		rect			(SECTION_X_OFFSET+0) -1 240 24 CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		forecolor		1 1 1 0.8 \
+		exp				text( titleArg );\
+		textstyle 		ITEM_TEXTSTYLE_SHADOWED \
+		textfont		UI_FONT_NORMAL \
+		textscale		TEXTSIZE_DEFAULT \
+		textstyle		CHOICE_TEXTSTYLE \
+		textAlign		ITEM_ALIGN_MIDDLE_CENTER \
+		textAlignX		SECTION_TEXT_OFFSET_X \
+		visible 		visArg \
+		decoration \
+	}	
+
+#define CHOICE_SECTION_TEXT_CUSTOM( itemIndex, titleArg, visArg, size) \  //text- rozdelovanie na riadky
+	itemDef \
+	{ \
+		type			ITEM_TYPE_TEXT \
+		rect			(SECTION_X_OFFSET+0) -1 size CHOICE_HORIZONTAL_ALIGN CHOICE_VERTICAL_ALIGN \
+		origin			CHOICE_ORIGIN( itemIndex ) \
+		forecolor		1 1 1 0.8 \
+		exp				text( titleArg );\
+		textstyle 		ITEM_TEXTSTYLE_SHADOWED \
+		textfont		UI_FONT_NORMAL \
+		textscale		TEXTSIZE_DEFAULT \
+		textstyle		CHOICE_TEXTSTYLE \
+		textAlign		ITEM_ALIGN_MIDDLE_CENTER \
+		textAlignX		SECTION_TEXT_OFFSET_X \
+		visible 		visArg \
+		decoration \
+	}
+
+#define PREPROC_TEXT_DRAW_ALIGNED_EXP_VIS( prect, porigin, ptext, psize, palignx, paligny, palign, pcolor, vis) \ //tlacitko aktivovane dvarom viditelne iba niekedy
+itemDef { \
+	rect			prect \
+	origin 			porigin \
+	textalignx		palignx textaligny paligny \
+	textstyle		ITEM_TEXTSTYLE_SHADOWED \
+	textalign		palign \
+	textscale		psize \
+	forecolor		pcolor \
+	exp				text( ptext ); \
+	visible			vis \
+	decoration 		autowrapped \
+	} \	
+
+#define BUTTON_ACTION_TEXT( px, py, pxs, pys, ax, ay, pimg, pvis, pact_now) \ //tlacidlo, text, shader, akcia, no menu format!
+itemDef { \
+	type			1 \
+	style			WINDOW_STYLE_SHADER \
+	rect			px py pxs pys ax ay \
+	background		pimg \
+	forecolor		COLOR_FOCUSED \
+	visible			pvis \
+	mouseEnter { play "mouse_over"; } \ 
+	action { play "mouse_click"; pact_now; }	\
+	} \				
+	
+{
+
+
+	menuDef
+	{
+		name			"admin"
+		rect			0 0 640 480
+		focuscolor		COLOR_FOCUSED
+		style			WINDOW_STYLE_EMPTY
+		blurWorld		7.0
+		onOpen
+		{	
+			// pc's initial selection loadout display workaround
+			#ifdef PC
+				execnow "set admin_round_restart 0; set admin_player_kick 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0; set admin_player_respawn 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0"
+				scriptMenuResponse "admin_next_player"
+			#endif
+		}
+		
+		onEsc
+		{
+			play "mouse_click";
+			close self;
+			//open "team_marinesopfor";
+		}
+
+		// background overlay
+		itemDef
+		{
+			style			WINDOW_STYLE_FILLED
+			rect			0 0 640 480 HORIZONTAL_ALIGN_FULLSCREEN VERTICAL_ALIGN_FULLSCREEN
+			backcolor		0 0 0 0.75 //0 0.05 0.15 0.5
+			visible			1
+			decoration
+		}
+
+		// gradient_top
+		itemDef
+		{
+			style			WINDOW_STYLE_SHADER
+			rect			0 0 854 75 HORIZONTAL_ALIGN_FULLSCREEN 0
+			background		"gradient_top"
+			visible			1
+			decoration
+		}
+
+		// gradient_bottom
+		itemDef
+		{
+			style			WINDOW_STYLE_SHADER
+			rect			0 405 854 75 HORIZONTAL_ALIGN_FULLSCREEN 0
+			background		"gradient_bottom"
+			visible			1
+			decoration
+		}
+		
+		// ------------------ TREE TITLE ------------------
+
+		CHOICE_MENU_TITLE( "Admin Menu" )
+
+		// ------------------ buttons ---------------------
+		#define BACK_OPEN open "team_marinesopfor";
+		#define BACK_CLOSE "@MENU_CLOSE";
+		#include "ui_mp/navcontrols.inc"
+
+		// PC widescreen fix
+		/*#undef	CHOICE_HORIZONTAL_ALIGN
+		#define CHOICE_HORIZONTAL_ALIGN HORIZONTAL_ALIGN_CENTER*/
+		
+		#undef	CHOICE_X_START
+		#undef	CHOICE_Y_START
+		#define CHOICE_X_START			20
+		#define CHOICE_Y_START			38
+
+		//******************************************************************************************************
+		//*****************************************              ***********************************************
+		//*****************************************     MAPY     ***********************************************
+		//*****************************************              ***********************************************
+		//******************************************************************************************************
+		
+		CHOICE_SECTION_TITLE_COLOR( 1, "Map options" , 1 , 1 0 0 )
+		CHOICE_BUTTON_FOCUS( 2, "Restart Round", execnow "set admin_round_restart 1; set admin_map_set 0; set admin_map_set_next 0; set admin_map_next 0; set admin_map_restart 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0" , ; , ; )		
+		CHOICE_BUTTON_FOCUS( 3, "Restart Map",   execnow "set admin_round_restart 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_next 0; set admin_map_restart 1; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0" , ; , ; )
+		CHOICE_BUTTON_FOCUS( 4, "Next Map",      execnow "set admin_round_restart 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_next 1; set admin_map_restart 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0" , ; , ; )		
+		CHOICE_BUTTON_FOCUS( 5, "Set Map",       execnow "set admin_round_restart 0; set admin_map_set 1; set admin_map_set_next 0; set admin_map_next 0; set admin_map_restart 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0" , ; , ; )
+		CHOICE_BUTTON_FOCUS( 6, "Set Next Map",  execnow "set admin_round_restart 0; set admin_map_set 0; set admin_map_set_next 1; set admin_map_next 0; set admin_map_restart 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0" , ; , ; )		
+		CHOICE_BUTTON_FOCUS_VIS( 8, "Origin(place trigger)",  scriptMenuResponse "admin_place_trigger" ; execnow "set admin_round_restart 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_next 0; set admin_map_restart 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0" , ; , ; , when(dvarint("ui_adm_blue") == 1))		
+		
+		//------------------------------------
+		//-------button+nadpis----------------
+		//------------------------------------
+		
+		//restart kola
+		SECTION_TITLE_COLOR_ALIGNED( 0, 145, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Restart kola" , when(dvarint(admin_round_restart) == 1), 1 0 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_round_restart) == 1) , scriptMenuResponse "admin_restart_round")
+		
+		//restart mapy
+		SECTION_TITLE_COLOR_ALIGNED( 0, 145, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Restart mapy" , when(dvarint(admin_map_restart) == 1), 1 0 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_map_restart) == 1) , scriptMenuResponse "admin_restart_map")
+
+		//dalsia mapa
+		SECTION_TITLE_COLOR_ALIGNED( 0, 145, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Spustit nasledujucu mapu" , when(dvarint(admin_map_next) == 1), 1 0 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_map_next) == 1) , scriptMenuResponse "admin_next_map_exitgame")		
+		
+		//set map
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Spustit mapu..." , when(dvarint(admin_map_set) == 1), 1 0 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_map_set) == 1) , scriptMenuResponse "admin_set_map")
+		
+		//dalsia mapa 
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Nastavit dalsiu mapu..." , when(dvarint(admin_map_set_next) == 1), 1 0 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_map_set_next) == 1) , scriptMenuResponse "admin_set_next_map")
+
+		//------------------------------------
+		//-------set map----------------------
+		//------------------------------------		
+		
+		//---------Next - Prev------------//	
+		itemDef //next
+		{
+			type			1
+			style			WINDOW_STYLE_SHADER
+			rect			30 140 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			background		"ui_arrow_right"
+			forecolor		COLOR_FOCUSED
+			visible			when(dvarint(admin_map_set) == 1 || dvarint(admin_map_set_next) == 1)
+			mouseEnter { play "mouse_over"; } 
+			action { play "mouse_click"; scriptMenuResponse "admin_next_map"; }	
+		}
+		
+		itemDef //prev
+		{
+			type			1
+			style			WINDOW_STYLE_SHADER
+			rect			-50 140 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			background		"ui_arrow_left"
+			forecolor		COLOR_FOCUSED
+			visible			when(dvarint(admin_map_set) == 1 || dvarint(admin_map_set_next) == 1)
+			mouseEnter { play "mouse_over"; } 
+			action { play "mouse_click"; scriptMenuResponse "admin_prev_map"; }	
+		}		
+
+		//------3 mapy--------//
+		
+		itemDef //map 1.
+		{
+			rect			-300 80 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_SMALL
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textfont		UI_FONT_OBJECTIVE
+			textAlign		ITEM_ALIGN_LEFT
+			forecolor		1 1 1 1
+			exp 			text( dvarstring( admin_map_first ) );
+			visible			when(dvarint(admin_map_set) == 1 || dvarint(admin_map_set_next) == 1)
+			decoration
+		}		
+
+		itemDef //map 2.
+		{
+			rect			0 80 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_SMALL
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textfont		UI_FONT_OBJECTIVE
+			textAlign		ITEM_ALIGN_CENTER
+			forecolor		1 1 1 1
+			exp 			text( dvarstring( admin_map_second ) );
+			visible			when(dvarint(admin_map_set) == 1 || dvarint(admin_map_set_next) == 1)
+			decoration
+		}	
+
+		itemDef //map 3.
+		{
+			rect			280 80 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_SMALL
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textfont		UI_FONT_OBJECTIVE
+			textAlign		ITEM_ALIGN_RIGHT
+			forecolor		1 1 1 1
+			exp 			text( dvarstring( admin_map_third ) );
+			visible			when(dvarint(admin_map_set) == 1 || dvarint(admin_map_set_next) == 1)
+			decoration
+		}			
+		
+		//******************************************************************************************************
+		//*****************************************              ***********************************************
+		//*****************************************    PLAYER    ***********************************************
+		//*****************************************              ***********************************************
+		//******************************************************************************************************	
+
+		#undef	CHOICE_X_START
+		#undef	CHOICE_Y_START
+		#define CHOICE_X_START			240
+		#define CHOICE_Y_START			-130 //370
+		
+		CHOICE_SECTION_TITLE_COLOR( 8, "Player options" , 1 , 0 1 0 )
+		CHOICE_BUTTON_FOCUS( 9,  "Kill",           execnow "set admin_player_level 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 1; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0; set admin_round_restart 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0" , ; , ; )		
+		CHOICE_BUTTON_FOCUS( 10, "Point",          execnow "set admin_player_level 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 1; set admin_player_spect 0; set admin_player_team 0; set admin_round_restart 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0" , ; , ; )
+		CHOICE_BUTTON_FOCUS( 11, "Join Spectator", execnow "set admin_player_level 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 1; set admin_player_team 0; set admin_round_restart 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0" , ; , ; )		
+		CHOICE_BUTTON_FOCUS( 12, "Join Team",      execnow "set admin_player_level 0; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 1; set admin_round_restart 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0" , ; , ; )
+		CHOICE_BUTTON_FOCUS( 13, "Respawn",        execnow "set admin_player_level 0; set admin_player_respawn 1; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0; set admin_round_restart 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0" , ; , ; )		
+		CHOICE_BUTTON_FOCUS( 15, "Level",          execnow "set admin_player_level 1; set admin_player_respawn 0; set admin_player_kick 0; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0; set admin_round_restart 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0" , ; , ; )
+		CHOICE_BUTTON_FOCUS( 14, "Kick",           execnow "set admin_player_level 0; set admin_player_respawn 0; set admin_player_kick 1; set admin_player_kill 0; set admin_player_point 0; set admin_player_spect 0; set admin_player_team 0; set admin_round_restart 0; set admin_map_next 0; set admin_map_set 0; set admin_map_set_next 0; set admin_map_restart 0" , ; , ; )
+		
+		//------------------------------------
+		//-------button+nadpis----------------
+		//------------------------------------
+		
+		//kill
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Zabit hraca..." , when(dvarint(admin_player_kill) == 1), 0 1 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_player_kill) == 1) , scriptMenuResponse "admin_player_kill")
+		
+		//point
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Oznacit hraca..." , when(dvarint(admin_player_point) == 1), 0 1 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_player_point) == 1) , scriptMenuResponse "admin_player_point")
+
+		//spectator
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Presunut hraca do timu spectator" , when(dvarint(admin_player_spect) == 1), 0 1 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_player_spect) == 1) , scriptMenuResponse "admin_player_spect")		
+		
+		//team 
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Presunut hraca do timu jumper/lovec" , when(dvarint(admin_player_team) == 1), 0 1 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_player_team) == 1) , scriptMenuResponse "admin_player_team")
+		
+		//respawn
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Respawn hraca" , when(dvarint(admin_player_respawn) == 1), 0 1 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_player_respawn) == 1) , scriptMenuResponse "admin_player_respawn")
+
+		//add level
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Pridanie levelu" , when(dvarint(admin_player_level) == 1), 0 1 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_player_level) == 1) , scriptMenuResponse "admin_player_level")
+
+		//kick
+		SECTION_TITLE_COLOR_ALIGNED( 0, 0, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "Vyhodit hraca" , when(dvarint(admin_player_kick) == 1), 0 1 0 )
+		BUTTON_ACTION_TEXT( -150, 170, 300, 35, HORIZONTAL_ALIGN_CENTER, VERTICAL_ALIGN_CENTER, "vykonaj" , when(dvarint(admin_player_kick) == 1) , scriptMenuResponse "admin_player_kick")		
+		
+		//------------------------------------
+		//-------set PLAYER-------------------
+		//------------------------------------		
+		
+		//---------Next - Prev------------//	
+		itemDef //next
+		{
+			type			1
+			style			WINDOW_STYLE_SHADER
+			rect			30 140 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			background		"ui_arrow_right"
+			forecolor		COLOR_FOCUSED
+			visible			when(dvarint(admin_player_kill) == 1 || dvarint(admin_player_point) == 1 || dvarint(admin_player_spect) == 1 || dvarint(admin_player_team) == 1 || dvarint(admin_player_respawn) == 1 || dvarint(admin_player_kick) == 1 || dvarint(admin_player_level) == 1)
+			mouseEnter { play "mouse_over"; } 
+			action { play "mouse_click"; scriptMenuResponse "admin_next_player"; }	
+		}
+		
+		itemDef //prev
+		{
+			type			1
+			style			WINDOW_STYLE_SHADER
+			rect			-50 140 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			background		"ui_arrow_left"
+			forecolor		COLOR_FOCUSED
+			visible			when(dvarint(admin_player_kill) == 1 || dvarint(admin_player_point) == 1 || dvarint(admin_player_spect) == 1 || dvarint(admin_player_team) == 1 || dvarint(admin_player_respawn) == 1 || dvarint(admin_player_kick) == 1 || dvarint(admin_player_level) == 1)
+			mouseEnter { play "mouse_over"; } 
+			action { play "mouse_click"; scriptMenuResponse "admin_prev_player"; }	
+		}		
+
+		//------3 mapy--------//
+		
+		itemDef //map 1.
+		{
+			rect			-300 80 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_SMALL
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textfont		UI_FONT_OBJECTIVE
+			textAlign		ITEM_ALIGN_LEFT
+			forecolor		1 1 1 1
+			exp 			text( dvarstring( admin_player_first ) );
+			visible			when(dvarint(admin_player_kill) == 1 || dvarint(admin_player_point) == 1 || dvarint(admin_player_spect) == 1 || dvarint(admin_player_team) == 1 || dvarint(admin_player_respawn) == 1 || dvarint(admin_player_kick) == 1 || dvarint(admin_player_level) == 1)
+			decoration
+		}		
+
+		itemDef //map 2.
+		{
+			rect			0 80 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_SMALL
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textfont		UI_FONT_OBJECTIVE
+			textAlign		ITEM_ALIGN_CENTER
+			forecolor		1 1 1 1
+			exp 			text( dvarstring( admin_player_second ) );
+			visible			when(dvarint(admin_player_kill) == 1 || dvarint(admin_player_point) == 1 || dvarint(admin_player_spect) == 1 || dvarint(admin_player_team) == 1 || dvarint(admin_player_respawn) == 1 || dvarint(admin_player_kick) == 1 || dvarint(admin_player_level) == 1)
+			decoration
+		}	
+
+		itemDef //map 3.
+		{
+			rect			280 80 20 20 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+			textscale		TEXTSIZE_SMALL
+			textstyle		ITEM_TEXTSTYLE_SHADOWED
+			textfont		UI_FONT_OBJECTIVE
+			textAlign		ITEM_ALIGN_RIGHT
+			forecolor		1 1 1 1
+			exp 			text( dvarstring( admin_player_third ) );
+			visible			when(dvarint(admin_player_kill) == 1 || dvarint(admin_player_point) == 1 || dvarint(admin_player_spect) == 1 || dvarint(admin_player_team) == 1 || dvarint(admin_player_respawn) == 1 || dvarint(admin_player_kick) == 1 || dvarint(admin_player_level) == 1)
+			decoration
+		}		
+			
+		#include "ui/safearea.menu"
+	}
+}
+
+
