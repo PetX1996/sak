@@ -22,7 +22,7 @@ OnSpawnPlayer()
 	{
 		self waittill("spawned_player");
 		
-		self thread test_thread(); //pridavanie bodov
+		//self thread test_thread(); //pridavanie bodov
 		self thread speciality_on_spawn();
 		self thread waiter_gun(); //repelent granat
 		//self thread MenuResponses();
