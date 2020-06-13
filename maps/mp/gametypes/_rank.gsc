@@ -603,6 +603,9 @@ unlockWeapon( refString )
 		
 	stat = int( tableLookup( "mp/statstable.csv", 4, refString, 1 ) );
 	
+	if ( stat <= 0 )
+		return;
+		
 	assertEx( stat > 0, "statsTable refstring " + refString + " has invalid stat number: " + stat );
 	
 	if( self getStat( stat ) > 0 )

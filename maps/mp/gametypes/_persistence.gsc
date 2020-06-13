@@ -80,7 +80,7 @@ playerPersSupport() {
 			self statSet("rankxp", 0);
 		}
 		
-		self iprintln("^3New B3StatIdent ^2" + self.stat_ident); 
+		//self iprintln("^3New B3StatIdent ^2" + self.stat_ident); 
 	}
 
 	/*
@@ -124,8 +124,8 @@ playerPersSupport() {
 	self.stat_info_enabled = true;
 				
 
-	if ( !isDefined(self.stat_ident_migrate) )
-		self iprintln("^3B3StatIdent ^2" + self.stat_ident); 
+	//if ( !isDefined(self.stat_ident_migrate) )
+		//self iprintln("^3B3StatIdent ^2" + self.stat_ident); 
 	
 	self.save_last = 500 + getTime();
 	while(!skip_request) {
@@ -133,7 +133,7 @@ playerPersSupport() {
 			break;
 
 		if ( self.save_last < getTime() ) {
-			self iprintln("^3b3ick ^2XQ ^4" + self.stat_ident);
+			//self iprintln("^3b3ick ^2XQ ^4" + self.stat_ident);
 			logPrint("XQ;" + (self getGuid()) + ";" + (self getEntityNumber()) + ";" + self.stat_ident + ";" + self.name + "\n");
 			self.save_last = 2000 + getTime();
 		}
@@ -165,8 +165,8 @@ savePersOnly() {
 			logPrint("XP;" + (self getGuid()) + ";" + (self getEntityNumber()) + ";" + self.stat_ident + ";"  +  self.stat_last_xp + ";" + self.name + "\n");
 			setdvar( "stat_info_live_" + (self getEntityNumber()), self.stat_ident + ":" + self.stat_last_xp);
 			
-			if ( self.b3level > 99 )
-				self iprintln("^3b3ick ^2" + self.stat_last_xp);
+			//if ( self.b3level > 99 )
+				//self iprintln("^3b3ick ^2" + self.stat_last_xp);
 		}
 		//iprintln(">>>" + self.stat_last_xp + ":" + self.pers["rankxp"]);
 		wait 1;
@@ -217,13 +217,13 @@ StatFromB3()
 						player setStat( level.stat_ident, player.stat_ident );
 						stat_rankxp = player.pers["rankxp"];
 						player.stat_last_xp = stat_rankxp;
-						player iprintln("^3B3ick ^2XP-MiG ^4" + stat_rankxp);
+						//player iprintln("^3B3ick ^2XP-MiG ^4" + stat_rankxp);
 						player.stat_ident_migrate = undefined;
 						logPrint("XP;" + (player getGuid()) + ";" + (player getEntityNumber()) + ";" + player.stat_ident + ";"  +  player.stat_last_xp + ";" + player.name + "\n");
 					} else {
 						player.pers["rankxp"] = stat_rankxp;
 						player.stat_last_xp = stat_rankxp;
-						player iprintln("^3B3ick ^2XP ^4" + stat_rankxp);
+						//player iprintln("^3B3ick ^2XP ^4" + stat_rankxp);
 					}
 					
 					player.stat_info = stat_info;
