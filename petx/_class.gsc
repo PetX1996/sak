@@ -16,7 +16,7 @@ Onplayerconnect()
 		player.class_shield = false;
 		player.electric_timer = 0;
 		
-		player thread Stat_debug();
+		//player thread Stat_debug();
 		player thread OnSpawnPlayer();
 		
 		player thread SendDvars();

@@ -371,11 +371,13 @@ AllAlivePlayers(team)
 
 waitdeath()
 {
-	for(;;)
-	{
+	self endon("disconnect");
+
+	//for(;;)
+	//{
 		self waittill ("death");
 		
-		self iprintln("^1death_notify");
+		//self iprintln("^1death_notify");
 		
 		if (!self.spectator && !self.suicidedeath && self.pers["team"] == "allies" && !level.sltime) //po zacati kola, pridanie k lovcom
 		{
@@ -430,7 +432,7 @@ waitdeath()
 			self.axisalive = true;
 			self petx\_weapons::give_class("axis",self.class_damage);
 		}
-	}
+	//}
 }
 
 radar_on_death()
@@ -572,7 +574,11 @@ pickenemy(player)
 
 lovec_team_change()
 {
-	rank = self maps\mp\gametypes\_rank::getrank();
+	rank = 99;
+	if (!getDvarInt("scr_classIgnoreRank"))
+	{
+		rank = self maps\mp\gametypes\_rank::getrank();
+	}
 	self setclientdvar("ui_player_lvl", rank);
 
 	self.suicidedeath = true;
@@ -697,7 +703,11 @@ Join()
 		return;
 	}
 	
-	rank = self maps\mp\gametypes\_rank::getrank();
+	rank = 99;
+	if (!getDvarInt("scr_classIgnoreRank"))
+	{
+		rank = self maps\mp\gametypes\_rank::getrank();
+	}
 	self setclientdvar("ui_player_lvl", rank);
 
 	self.suicidedeath = true;

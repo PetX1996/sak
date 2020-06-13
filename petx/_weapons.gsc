@@ -174,7 +174,7 @@ give_class(team,response)
 	self.spawn_progress = undefined;
 	self notify("spawned_player");
 	
-	self iprintln("spawn");
+	//self iprintln("spawn");
 }
 
 caszmenyclassu(cas)
